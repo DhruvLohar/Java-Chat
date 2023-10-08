@@ -6,6 +6,7 @@ import java.awt.*;
 // import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.event.*;
 import java.awt.geom.RoundRectangle2D;
+import testing.Server2;
 
 
 class RoundedButton extends JButton {
@@ -161,7 +162,8 @@ public class homepage extends JFrame{
             @Override
             public void mouseClicked(MouseEvent e) {
                 // Open the "Server2.java" window
-                Server2 server2Window = new Server2();
+                state.setRoomCode("CESSxCODECELL");
+                Server2 server2Window = new Server2(false);
                 server2Window.setVisible(true);
         
                 // Close the current "homepage.java" window
@@ -177,12 +179,6 @@ public class homepage extends JFrame{
         add(p1);
         setVisible(true);
     }
-    
-    
-    
-    
-    
-    
     
     public static void main(String args[]){
         

@@ -263,7 +263,7 @@ public class joinroom extends javax.swing.JFrame {
         
         state.setRoomCode(roomCode);
         // Create a new instance of the server2.java class (assuming it's a JFrame)
-        Server2 server2Window = new Server2(); // Replace "server2" with your actual class name
+        Server2 server2Window = new Server2(false); // Replace "server2" with your actual class name
         server2Window.setVisible(true);
         
         // Close the current joinroom window

@@ -9,42 +9,68 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import testing.DataPacket;
+
 public class ClientHandler implements Runnable {
     public static HashMap<String, ArrayList<ClientHandler>> roomToClients = new HashMap<>();
     public static final int MAX_CLIENTS_PER_ROOM = 10; // Define your maximum limit
     private Socket socket;
     private BufferedReader bufferedReader;
     private BufferedWriter bufferedWriter;
+
+    DataPacket initalPayload = new DataPacket();
     private String clientUsername;
-    private String clientRoom;
+    private String clientRoomCode;
 
     public ClientHandler(Socket socket) {
+        roomToClients.put("CESSxCODECELL", new ArrayList<>());
+
         try {
             this.socket = socket;
             this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            this.clientUsername = bufferedReader.readLine();
-            this.clientRoom = bufferedReader.readLine(); // Read the room name from the client
-            System.out.print(clientUsername + " " + clientRoom);
 
-            ArrayList<ClientHandler> clientsInRoom = roomToClients.get(clientRoom);
+            String connectionreq = bufferedReader.readLine();
+            DataPacket response = new DataPacket();
 
-            if (clientsInRoom == null) {
-                clientsInRoom = new ArrayList<>();
-                roomToClients.put(clientRoom, clientsInRoom);
-            }
+            initalPayload.fromString(connectionreq);
+            String type = initalPayload.get("type");
+            String username = initalPayload.get("username");
+            String roomCode = initalPayload.get("roomCode");
+            clientUsername = username;
+            clientRoomCode = roomCode;
 
-            if (clientsInRoom.size() >= MAX_CLIENTS_PER_ROOM) {
-                // If the room is full, you can choose to handle this situation
-                // e.g., send a message to the client that the room is full and close the
-                // connection
-                bufferedWriter.write("SERVER: The room is full. You cannot join.");
-                bufferedWriter.newLine();
-                bufferedWriter.flush();
-                closeEverything(socket, bufferedReader, bufferedWriter);
-            } else {
-                clientsInRoom.add(this);
-                broadcastMessage("SERVER: " + clientUsername + " has entered the chat!", clientRoom);
+            ArrayList<ClientHandler> clientsInRoom = roomToClients.get(roomCode);
+            switch (type) {
+                case "create_room":
+                    if (clientsInRoom == null) {
+                        clientsInRoom = new ArrayList<>();
+                        roomToClients.put(roomCode, clientsInRoom);
+                    }
+                    clientsInRoom.add(this);
+                    System.out.println("A room ( " + roomCode + " ) was created by " + username + ".");
+                    break;
+                case "join_room":
+                    // int maxNumOfUsers = Integer.parseInt(initalPayload.get("maxNumOfUsers"));
+                    // if (clientsInRoom.size() >= maxNumOfUsers) {
+                    //     bufferedWriter.write("SERVER: The room is full. You cannot join.");
+                    //     bufferedWriter.newLine();
+                    //     bufferedWriter.flush();
+                    //     closeEverything(socket, bufferedReader, bufferedWriter);
+                    // }
+                    clientsInRoom.add(this);
+
+                    response.put("type", "joined_room");
+                    response.put("username", username);
+                    System.out.println(username + " joined room ( " + roomCode + " ).");
+                    broadcastMessage(response.toString(), roomCode);
+                    break;
+                case "message":
+                    broadcastMessage(connectionreq, roomCode);
+                    break;
+                default:
+                    closeEverything(socket, bufferedReader, bufferedWriter);
+                    break;
             }
         } catch (IOException e) {
             closeEverything(socket, bufferedReader, bufferedWriter);
@@ -53,11 +79,11 @@ public class ClientHandler implements Runnable {
 
     @Override
     public void run() {
-        String messageFromClient;
+        String dataFromServer;
         while (socket.isConnected()) {
             try {
-                messageFromClient = bufferedReader.readLine();
-                broadcastMessage(messageFromClient, clientRoom);
+                dataFromServer = bufferedReader.readLine();
+                broadcastMessage(dataFromServer, clientRoomCode);
             } catch (IOException e) {
                 closeEverything(socket, bufferedReader, bufferedWriter);
                 break;
@@ -66,6 +92,7 @@ public class ClientHandler implements Runnable {
     }
 
     public void broadcastMessage(String messageToSend, String room) {
+        System.out.println(room);
         ArrayList<ClientHandler> clientsInRoom = roomToClients.get(room);
         if (clientsInRoom == null) {
             return;
@@ -85,10 +112,13 @@ public class ClientHandler implements Runnable {
     }
 
     public void removeClientHandler() {
-        ArrayList<ClientHandler> clientsInRoom = roomToClients.get(clientRoom);
+        ArrayList<ClientHandler> clientsInRoom = roomToClients.get(clientRoomCode);
         if (clientsInRoom != null) {
             clientsInRoom.remove(this);
-            broadcastMessage("SERVER: " + clientUsername + " has left the chat!", clientRoom);
+            DataPacket data = new DataPacket();
+            data.put("type", "left_room");
+            data.put("username", clientUsername);
+            broadcastMessage(data.toString(), clientRoomCode);
         }
     }
 
@@ -109,4 +139,3 @@ public class ClientHandler implements Runnable {
         }
     }
 }
-

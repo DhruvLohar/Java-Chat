@@ -32,6 +32,7 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.basic.BasicScrollBarUI;
+import javax.xml.crypto.Data;
 
 import testing.backend.Client;
 
@@ -45,6 +46,7 @@ public class Server2 extends javax.swing.JFrame {
     private StateManager state;
     private ExecutorService executorService;
     private Client client;
+    private Socket socket;
 
     boolean isRoomHost;
 
@@ -66,8 +68,7 @@ public class Server2 extends javax.swing.JFrame {
         initComponents();
         this.setBackground(new Color(0.0f, 0.0f, 0.0f, 0.0f));
     
-        // Set the title label with the roomTitle
-        jLabel1.setText(state.getTitle());
+        jLabel1.setText(state.getRoomCode());
     
         // Center-align the text both horizontally and vertically
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -90,11 +91,23 @@ public class Server2 extends javax.swing.JFrame {
     }
 
     private void connectWithServer() throws UnknownHostException, IOException {
-        Socket socket = new Socket("localhost", 1234);
-        client = new Client(socket, state.getUsername(), state.getRoomCode()); // Pass the room name
-        client.listenForMessage();
-        client.sendMessage("MADARCHOD");        
-        client.sendMessage("SEX");
+        socket = new Socket("localhost", 1234);
+        client = new Client(socket); // Pass the room name
+        handleIncomingMessage();
+
+        DataPacket data = new DataPacket();
+        data.put("username", state.getUsername());
+        data.put("roomCode", state.getRoomCode());
+        if (isRoomHost) {
+            data.put("type", "create_room");
+            data.put("roomTitle", state.getTitle());
+            data.put("roomDesc", state.getDesc());
+            data.put("maxNumOfUsers", Integer.toString(state.getMaxNumOfUsers()));
+        } else {
+            data.put("type", "join_room");
+        }
+
+        client.sendMessage(data.toString());
     }
     
     /**
@@ -269,6 +282,12 @@ public class Server2 extends javax.swing.JFrame {
 
         jPanel4.add(vertical, BorderLayout.PAGE_START);
 
+        DataPacket data = new DataPacket();
+        data.put("type", "message");
+        data.put("message", out);
+        data.put("username", state.getUsername());
+        client.sendMessage(data.toString());
+
         jTextField1.setText("");
 
         SwingUtilities.invokeLater(() -> {
@@ -276,24 +295,55 @@ public class Server2 extends javax.swing.JFrame {
             verticalScrollBar.setValue(verticalScrollBar.getMaximum());
         });
 
-        
-
         jScrollPane1.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         jScrollPane1.repaint();
         repaint();
         invalidate();
         validate();
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-
-    // Add an ActionListener to the text field for the "Enter" key
-    // Add an ActionListener to the text field for the "Enter" key
-
-    
+    }
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
 
     }//GEN-LAST:event_jButton1MouseClicked
+
+    public void handleIncomingMessage() {
+        System.out.println("Listeneing for messages");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String msgFromGroupChat;
+                while (socket.isConnected()) {
+                    try {
+                        msgFromGroupChat = client.bufferedReader.readLine();
+                        DataPacket data = new DataPacket();
+                        data.fromString(msgFromGroupChat);
+                        
+                        switch (data.get("type")) {
+                            case "message":
+                                jPanel4.setLayout(new BorderLayout());
+
+                                JPanel box = createbox(data.get("username") + " : " + data.get("message"), false);
+                                vertical.add(box);
+                                vertical.add(Box.createVerticalStrut(15));
+        
+                                jPanel4.add(vertical, BorderLayout.PAGE_START);
+                                break;
+                            case "joined_room":
+                                System.out.println("koi toh aaya");
+                                break;
+                            case "left_room":
+                                System.out.println("koi toh gaya");
+                                break;
+                        }
+
+                        System.out.println(msgFromGroupChat);
+                    } catch (IOException e) {
+                        client.closeEverything(socket, client.bufferedReader, client.bufferedWriter);
+                    }
+                }
+            }
+        }).start();
+    }
 
     private void jTextField1KeyPressed(java.awt.event.KeyEvent evt) {
         int key = evt.getKeyCode();
@@ -307,8 +357,12 @@ public class Server2 extends javax.swing.JFrame {
             vertical.add(Box.createVerticalStrut(15));
             jPanel4.add(vertical, BorderLayout.PAGE_START);
             
-            client.sendMessage(out);
-            System.out.print("bhej diya");
+            DataPacket data = new DataPacket();
+            data.put("type", "message");
+            data.put("message", out);
+            data.put("username", state.getUsername());
+            data.put("roomCode", state.getRoomCode());
+            client.sendMessage(data.toString());
 
             jTextField1.setText("");
 

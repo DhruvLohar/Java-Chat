@@ -9,20 +9,18 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 
+import testing.DataPacket;
+
 public class Client {
     private Socket socket;
-    private BufferedReader bufferedReader;
-    private BufferedWriter bufferedWriter;
-    private String username;
-    private String roomName; // Add room name
+    public BufferedReader bufferedReader;
+    public BufferedWriter bufferedWriter;
 
-    public Client(Socket socket, String username, String roomName) {
+    public Client(Socket socket) {
         try {
             this.socket = socket;
             this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            this.username = username;
-            this.roomName = roomName; // Initialize room name
         } catch (IOException e) {
             closeEverything(socket, bufferedReader, bufferedWriter);
         }
@@ -40,38 +38,32 @@ public class Client {
         }
     }
 
-    // public void sendMessage() {
-    //     try {
-    //         bufferedWriter.write(username); // Include room name
-    //         bufferedWriter.newLine();
-    //         bufferedWriter.flush();
-
-    //         bufferedWriter.write(roomName); // Include room name
-    //         bufferedWriter.newLine();
-    //         bufferedWriter.flush();
-
-    //         Scanner scanner = new Scanner(System.in);
-    //         while (socket.isConnected()) {
-    //             String messageToSend = scanner.nextLine();
-    //             bufferedWriter.write(username + " (" + roomName + "): " + messageToSend); // Include room name
-    //             bufferedWriter.newLine();
-    //             bufferedWriter.flush();
-    //         }
-    //         scanner.close();
-    //     } catch (IOException e) {
-    //         closeEverything(socket, bufferedReader, bufferedWriter);
-    //     }
-    // }
-
     public void listenForMessage() {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String msgFromGroupChat;
+                String dataFromServer;
                 while (socket.isConnected()) {
                     try {
-                        msgFromGroupChat = bufferedReader.readLine();
-                        System.out.println(msgFromGroupChat);
+                        dataFromServer = bufferedReader.readLine();
+                        DataPacket payload = new DataPacket();
+                        payload.fromString(dataFromServer);
+                        String name = payload.get("username");
+
+                        switch (payload.get("type")) {
+                            case "joined_room":
+                                System.out.println("[JOINED ROOM] " + name);
+                                break;
+                            case "left_room":
+                                System.out.println("[LEFT ROOM] " + name);
+                                break;
+                            case "message":
+                                System.out.println("[" + name + " SAYS]" + payload.get("message"));
+                                break;
+                            default:
+                                closeEverything(socket, bufferedReader, bufferedWriter);
+                                break;
+                        }
                     } catch (IOException e) {
                         closeEverything(socket, bufferedReader, bufferedWriter);
                     }
@@ -98,18 +90,43 @@ public class Client {
 
     public static void main(String[] args) throws UnknownHostException, IOException {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter your username for the group chat:");
-        String username = scanner.nextLine();
-        System.out.println("Enter the room name:");
-        String roomName = scanner.nextLine(); // Input the room name
         Socket socket = new Socket("localhost", 1234);
-        Client client = new Client(socket, username, roomName); // Pass the room name
-        client.listenForMessage();
-        client.sendMessage("NAME");        
-        client.sendMessage("SEX");
+        Client client = new Client(socket); // Pass the room name
+        String username;
+        String roomName;
+        DataPacket data = new DataPacket();
 
+        int choice;
+        System.out.println("Create or Join? (1 / 2) : ");
+        choice = scanner.nextInt();
+
+        System.out.println("Enter your username for the group chat:");
+        username = scanner.nextLine();
+
+        System.out.println("Enter the room name:");
+        roomName = scanner.nextLine();
+
+        switch (choice) {
+            case 1:
+                data.put("type", "create_room");
+                data.put("username", username);
+                data.put("roomName", roomName);
+                // data.put("roomTitle", "Title");
+                // data.put("roomDesc", "Desc");
+                data.put("maxNumOfUsers", "5");
+
+                break;
+            case 2:
+                data.put("type", "join_room");
+                data.put("username", username);
+                data.put("roomCode", roomName);
+
+                break;
+        }
+
+        client.sendMessage(data.toString());
+        client.listenForMessage();
 
         scanner.close();
     }
 }
-
