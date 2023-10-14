@@ -1,2 +1,0 @@
-testing.Enterpage
-testing.RoundedPanel

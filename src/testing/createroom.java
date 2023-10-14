@@ -42,7 +42,6 @@ public class createroom extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        
         jLabel3 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jPanel1 = new RoundedPanel(40);
@@ -60,7 +59,6 @@ public class createroom extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         jTextField5 = new javax.swing.JTextField();
         jSpinner2 = new javax.swing.JSpinner();
-        jSpinner2.setValue((Integer) 2);
         jLabel10 = new javax.swing.JLabel();
 
         jLabel3.setText("jLabel3");
@@ -88,10 +86,6 @@ public class createroom extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel4.setText("Room Code");
 
-        
-        
-        
-
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
         jTextArea1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(235, 235, 235), 1, true));
@@ -103,6 +97,9 @@ public class createroom extends javax.swing.JFrame {
         jPanel3.setBackground(new java.awt.Color(103, 231, 217));
         jPanel3.setOpaque(false);
         jPanel3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                // jPanel3MouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 jPanel3MouseEntered(evt);
             }
@@ -140,7 +137,7 @@ public class createroom extends javax.swing.JFrame {
         );
 
         jLabel7.setFont(new java.awt.Font("Artifakt Element Heavy", 1, 24)); // NOI18N
-        jLabel7.setText("X");
+        jLabel7.setText("<<");
         jLabel7.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jLabel7.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -195,12 +192,10 @@ public class createroom extends javax.swing.JFrame {
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel2)
-                                    .addComponent(jScrollPane1)
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addGap(330, 330, 330)
-                                        .addComponent(jLabel7))
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 360, Short.MAX_VALUE)
                                     .addComponent(jTextField4))
-                                .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.LEADING))
                             .addComponent(jLabel4)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(92, 92, 92)
@@ -208,14 +203,14 @@ public class createroom extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(139, 139, 139)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(34, Short.MAX_VALUE))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(21, 21, 21)
+                .addGap(31, 31, 31)
                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(16, 16, 16)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel10)
                 .addGap(32, 32, 32)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -316,7 +311,7 @@ public class createroom extends javax.swing.JFrame {
     }
     
 
-    private void jLabel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseClicked
+    private void jLabel7MouseClicked(java.awt.event.MouseEvent evt) {                                     
         // Redirect to the homepage
         homepage homepageWindow = new homepage();
         homepageWindow.setVisible(true);

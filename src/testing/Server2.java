@@ -6,10 +6,12 @@ package testing;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Insets;
 import java.awt.LayoutManager;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
@@ -20,6 +22,7 @@ import java.net.UnknownHostException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -33,6 +36,10 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.xml.crypto.Data;
+import javax.swing.border.AbstractBorder;
+import javax.swing.border.Border;
+import javax.swing.BorderFactory;
+import javax.swing.border.EmptyBorder;
 
 import testing.backend.Client;
 
@@ -68,7 +75,11 @@ public class Server2 extends javax.swing.JFrame {
         initComponents();
         this.setBackground(new Color(0.0f, 0.0f, 0.0f, 0.0f));
     
-        jLabel1.setText(state.getRoomCode());
+        
+        String labelText = state.getTitle() +"("+"<font color='red'>"+state.getRoomCode()+"</font>"+")";
+        jLabel1.setText("<html>" + labelText + "</html>");
+
+
     
         // Center-align the text both horizontally and vertically
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -324,8 +335,8 @@ public class Server2 extends javax.swing.JFrame {
 
                                 JPanel box = createbox(data.get("username") + " : " + data.get("message"), false);
                                 vertical.add(box);
+                                
                                 vertical.add(Box.createVerticalStrut(15));
-        
                                 jPanel4.add(vertical, BorderLayout.PAGE_START);
                                 break;
                             case "joined_room":
@@ -380,28 +391,33 @@ public class Server2 extends javax.swing.JFrame {
     }
 
     public JPanel createbox(String text, boolean isSelf) {
-        JPanel p2 = formatLabel(text);
+        JPanel p2 = formatLabel(text, isSelf);
         JPanel box = new JPanel(new BorderLayout());
         box.add(p2, (isSelf) ? BorderLayout.LINE_END : BorderLayout.LINE_START);
-
+        box.setBorder(null);
         return box;
-
     }
 
-    public static JPanel formatLabel(String out) {
-        JPanel panel = new JPanel(new BorderLayout());
+    public static JPanel formatLabel(String out, boolean isSelf) {
+        JPanel panel = new RoundedPanel(20);
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-
+        if (!isSelf) {
+            panel.setBackground(new Color(164, 157, 255));
+        } else {
+            panel.setBackground(new Color(0, 191, 252));
+        }
+        panel.setOpaque(false);
+        panel.setBorder(null);
+    
         JLabel output = new JLabel("<html><p style=\"width:150 px\">" + out + "</p></html>");
-        output.setFont(new Font("Segoe UI",Font.PLAIN,13));
-        output.setBackground(new Color(0, 191, 252));
-        output.setOpaque(true);
+        output.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         output.setBorder(new EmptyBorder(10, 10, 10, 20));
-
+    
         panel.add(output);
-
+    
         return panel;
     }
+    
 
     /**
      * @param args the command line arguments
@@ -453,6 +469,30 @@ public class Server2 extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
 }
+
+class RoundedBorder extends AbstractBorder {
+    private final int radius;
+    private final Color color;
+
+    public RoundedBorder(int radius, Color color) {
+        this.radius = radius;
+        this.color = color;
+    }
+
+    @Override
+    public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
+        g.setColor(this.color);
+        g.drawRoundRect(x, y, width-1, height-1, radius, radius);
+    }
+
+    @Override
+    public Insets getBorderInsets(Component c) {
+        return new Insets(this.radius, this.radius, this.radius, this.radius);
+    }
+}
+
+
+
 //this class is used to creat graphics for the circular border
 
 class RoundedPanel extends JPanel {

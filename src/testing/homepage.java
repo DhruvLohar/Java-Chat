@@ -93,6 +93,33 @@ public class homepage extends JFrame{
         p1.setBorder(new EmptyBorder(30,0,0,0));
         p1.setBounds(0,50,401,585);
         p1.setOpaque(false);
+        
+        JPanel backslashButtonPanel = new JPanel(new GridLayout(2, 1)); // 2 rows, 1 column
+        backslashButtonPanel.setOpaque(false);
+        
+
+        // Create the backslash label
+        JLabel backslashLabel = new JLabel("<<");
+        backslashLabel.setFont(new java.awt.Font("Artifakt Element Heavy", 1, 24));
+        backslashLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        backslashLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        backslashButtonPanel.setLayout(new GridBagLayout());
+        backslashButtonPanel.setOpaque(false);
+
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.anchor = GridBagConstraints.NORTH; // Align to the top
+        backslashButtonPanel.add(backslashLabel, gbc);
+
+        backslashLabel.setAlignmentY(Component.TOP_ALIGNMENT);
+        
+        backslashButtonPanel.add(backslashLabel);
+        p1.add(backslashButtonPanel);
+
+        // Create a panel for the buttons
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
+        buttonPanel.setOpaque(false);
+
 
          // Create rounded buttons with a border radius of 15
         RoundedButton createButton = new RoundedButton("Create", 15);
@@ -111,14 +138,7 @@ public class homepage extends JFrame{
         createButton.setForeground(Color.WHITE);
         joinButton.setForeground(Color.WHITE);
 
-        // Add action listeners or functionality to the buttons if needed
 
-        // Create a panel for the buttons
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setOpaque(false);
-        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 0)); // Adjust spacing as needed
-
-        // Add action listeners to the buttons
         createButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -131,6 +151,13 @@ public class homepage extends JFrame{
             }
         });
 
+        backslashLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // Close the program
+                System.exit(0);
+            }
+        });
         joinButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -147,22 +174,29 @@ public class homepage extends JFrame{
         buttonPanel.add(createButton);
         buttonPanel.add(joinButton);
 
+        // backslashButtonPanel.add(buttonPanel);
+
         int gap = 20; // Adjust the gap size as needed
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(gap, 0, gap, 0));
 
         // Add the button panel to p1
-        p1.add(buttonPanel, BorderLayout.SOUTH);
+        p1.add(buttonPanel);
 
         
         //cess X codecell wala panel
-        Card codecell = new Card("Cess x Code Cell", "Cess is a committee in which students are basically for attendance purpose. The social media manager is elected by running after seniors through a junior friend.");
+        String title = "Cess x Code Cell";
+        String desc = "Cess is a technical community that provides you with an exposure to various fields.and gives you an opportunity to develop your co-curricular skills";
+        Card codecell = new Card(title, desc);
         JPanel codeCellCard = codecell.generateCard();
 
         codeCellCard.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 // Open the "Server2.java" window
+                state.setTitle(title);
+                state.setDesc(desc);
                 state.setRoomCode("CESSxCODECELL");
+                state.setMaxNumOfUsers(50);
                 Server2 server2Window = new Server2(false);
                 server2Window.setVisible(true);
         
@@ -172,11 +206,19 @@ public class homepage extends JFrame{
         });
         p1.add(codeCellCard);
         
-        
+
+
+        getContentPane().setLayout(new BorderLayout());
+
+        // Create an empty border with top padding only
+        int topPadding = 50;
+        ((JComponent) getContentPane()).setBorder(BorderFactory.createEmptyBorder(topPadding,0,0,0));
+
         setSize(401,635);
         getContentPane().setBackground(new Color(0,191,252));
         setUndecorated(true);
         add(p1);
+        setShape(new RoundRectangle2D.Double(0,0,getWidth(),getHeight(),40,40));
         setVisible(true);
     }
     

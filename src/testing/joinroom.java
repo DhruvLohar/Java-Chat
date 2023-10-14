@@ -114,7 +114,7 @@ public class joinroom extends javax.swing.JFrame {
         );
 
         jLabel7.setFont(new java.awt.Font("Artifakt Element Heavy", 1, 24)); // NOI18N
-        jLabel7.setText("X");
+        jLabel7.setText("<<");
         jLabel7.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jLabel7.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -133,10 +133,6 @@ public class joinroom extends javax.swing.JFrame {
             }
         });
 
-    
-        
-        
-
         jLabel2.setFont(new java.awt.Font("Segoe UI Black", 1, 36)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("MADS.NET");
@@ -149,22 +145,20 @@ public class joinroom extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(16, 16, 16)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(330, 330, 330)
-                                .addComponent(jLabel7))
-                            .addComponent(jTextField3)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel4)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGap(107, 107, 107)
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel7)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(133, 133, 133)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(89, 89, 89)
                         .addComponent(jLabel2)))
-                .addContainerGap(34, Short.MAX_VALUE))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -231,7 +225,7 @@ public class joinroom extends javax.swing.JFrame {
         jPanel3.setBackground(new Color(103, 231, 217));
     }//GEN-LAST:event_jPanel3MouseReleased
 
-    private void jLabel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseClicked
+    private void jLabel7MouseClicked(java.awt.event.MouseEvent evt) {                                     
         // Redirect to the homepage
         homepage homepageWindow = new homepage();
         homepageWindow.setVisible(true);

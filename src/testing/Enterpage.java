@@ -51,7 +51,7 @@ public class Enterpage extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(0, 153, 255));
+        jPanel1.setBackground(new java.awt.Color(0, 192, 252));
         jPanel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         jPanel1.setOpaque(false);
 
@@ -353,3 +353,4 @@ class RoundedPanel extends JPanel {
         graphics.drawRoundRect(0, 0, width - 1, height - 1, arcs.width, arcs.height); //paint border
     }
 }
+
