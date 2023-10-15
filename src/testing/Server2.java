@@ -8,6 +8,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -34,6 +35,7 @@ import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
+import javax.swing.plaf.TreeUI;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.xml.crypto.Data;
 import javax.swing.border.AbstractBorder;
@@ -74,10 +76,11 @@ public class Server2 extends javax.swing.JFrame {
         setUndecorated(true);
         initComponents();
         this.setBackground(new Color(0.0f, 0.0f, 0.0f, 0.0f));
-    
+
         
-        String labelText = state.getTitle() +"("+"<font color='red'>"+state.getRoomCode()+"</font>"+")";
-        jLabel1.setText("<html>" + labelText + "</html>");
+        String labelText = state.getTitle() + "<br><font color='red' size='3'>" + state.getRoomCode() + "</font>";
+jLabel1.setText("<html>" + labelText + "</html>");
+
 
 
     
@@ -148,7 +151,7 @@ public class Server2 extends javax.swing.JFrame {
         jPanel2.setOpaque(false);
 
         jLabel8.setFont(new java.awt.Font("Artifakt Element Heavy", 1, 24)); // NOI18N
-        jLabel8.setText("X");
+        jLabel8.setText("<<");
         jLabel8.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jLabel8.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -204,16 +207,16 @@ public class Server2 extends javax.swing.JFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Cess x Codecell");
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+                javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(88, 88, 88)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(jLabel8)
-                .addGap(34, 34, 34))
+                .addGap(20, 20, 20)
+                .addComponent(jLabel1)
+                .addContainerGap(88, Short.MAX_VALUE))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -222,7 +225,8 @@ public class Server2 extends javax.swing.JFrame {
                         .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton1)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            )
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -333,7 +337,7 @@ public class Server2 extends javax.swing.JFrame {
                             case "message":
                                 jPanel4.setLayout(new BorderLayout());
 
-                                JPanel box = createbox(data.get("username") + " : " + data.get("message"), false);
+                                JPanel box = createbox(data.get("message"), false);
                                 vertical.add(box);
                                 
                                 vertical.add(Box.createVerticalStrut(15));
@@ -398,25 +402,41 @@ public class Server2 extends javax.swing.JFrame {
         return box;
     }
 
-    public static JPanel formatLabel(String out, boolean isSelf) {
-        JPanel panel = new RoundedPanel(20);
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        if (!isSelf) {
-            panel.setBackground(new Color(164, 157, 255));
-        } else {
-            panel.setBackground(new Color(0, 191, 252));
+    public JPanel formatLabel(String out, boolean isSelf) {
+        
+            JPanel panel = new RoundedPanel(20);
+            panel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 0));
+            JPanel pillPanel = new RoundedPanel(20);
+            pillPanel.setBackground(new Color(0,191, 252)); 
+            pillPanel.setPreferredSize(new Dimension(60, 25));
+            pillPanel.setOpaque(false);
+            JLabel user =new JLabel(state.getUsername());
+            pillPanel.add(user);
+            if (!isSelf) {
+                panel.setBackground(new Color(164, 157, 255));
+                
+                panel.add(pillPanel);  
+                
+            } else {
+                panel.setBackground(new Color(0, 191, 252));
+            }
+            panel.setOpaque(false);
+            panel.setBorder(null);
+        
+            // Create a panel for the pill
+            // Add the pill panel to the main panel
+        
+            // Create the output label
+            JLabel output = new JLabel("<html><p style=\"width:150 px\">" + out + "</p></html>");
+            output.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+            output.setBorder(new EmptyBorder(10, 10, 10, 20));
+            panel.add(output); // Add the output label to the main panel
+        
+            return panel;
         }
-        panel.setOpaque(false);
-        panel.setBorder(null);
+        
     
-        JLabel output = new JLabel("<html><p style=\"width:150 px\">" + out + "</p></html>");
-        output.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        output.setBorder(new EmptyBorder(10, 10, 10, 20));
     
-        panel.add(output);
-    
-        return panel;
-    }
     
 
     /**

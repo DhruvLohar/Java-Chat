@@ -99,22 +99,73 @@ public class homepage extends JFrame{
         
 
         // Create the backslash label
+        // JLabel backslashLabel = new JLabel("<<");
+        // backslashLabel.setFont(new java.awt.Font("Artifakt Element Heavy", 1, 24));
+        // backslashLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        // backslashLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        // backslashButtonPanel.setLayout(new GridBagLayout());
+        // backslashButtonPanel.setOpaque(false);
+
+
+        // GridBagConstraints gbc = new GridBagConstraints();
+        // gbc.anchor = GridBagConstraints.NORTH; // Align to the top
+        // backslashButtonPanel.add(backslashLabel, gbc);
+
+        // backslashLabel.setAlignmentY(Component.TOP_ALIGNMENT);
+        
+        // backslashButtonPanel.add(backslashLabel);
+        // p1.add(backslashButtonPanel);
+
+
+        // JPanel backslashLabelPanel = new JPanel(new GridBagLayout());
+        // backslashLabelPanel.setOpaque(false);
+        
+        // // Create the backslash label
+        // JLabel backslashLabel = new JLabel("<<");
+        // backslashLabel.setFont(new java.awt.Font("Artifakt Element Heavy", 1, 24));
+        // backslashLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        // backslashLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
+        // // Add the backslash label to the panel
+        // backslashLabelPanel.add(backslashLabel);
+        
+        // // Create a panel for backslash and button panel
+        // JPanel backslashAndButtonPanel = new JPanel(new BorderLayout());
+        // backslashAndButtonPanel.setOpaque(false);
+        
+        // // Add the backslash label panel above the button panel
+        // backslashAndButtonPanel.add(backslashLabelPanel, BorderLayout.PAGE_START);
+        
+        
+        
+        // // Add the backslash and button panel to p1
+        // p1.add(backslashAndButtonPanel);
+
+
+        // Create a panel for backslash and button panel
+        JPanel backslashAndButtonPanel = new JPanel(new BorderLayout());
+        backslashAndButtonPanel.setOpaque(false);
+
+        // Create the backslash label panel
+        JPanel backslashLabelPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        backslashLabelPanel.setOpaque(false);
+
+        // Create the backslash label
         JLabel backslashLabel = new JLabel("<<");
         backslashLabel.setFont(new java.awt.Font("Artifakt Element Heavy", 1, 24));
-        backslashLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        backslashLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        backslashButtonPanel.setLayout(new GridBagLayout());
-        backslashButtonPanel.setOpaque(false);
+
+        // Add the backslash label to the panel
+        backslashLabelPanel.setBorder(BorderFactory.createEmptyBorder(-15,-5, 0, 0));
+        backslashLabelPanel.add(backslashLabel);
+
+        // Add the backslash label panel to the backslash and button panel, aligned to the left
+        backslashAndButtonPanel.add(backslashLabelPanel, BorderLayout.PAGE_START);
+        // backslashAndButtonPanel.add(buttonPanel, BorderLayout.CENTER);
+
+        // Add the backslash and button panel to p1
+        p1.add(backslashAndButtonPanel);
 
 
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.anchor = GridBagConstraints.NORTH; // Align to the top
-        backslashButtonPanel.add(backslashLabel, gbc);
-
-        backslashLabel.setAlignmentY(Component.TOP_ALIGNMENT);
-        
-        backslashButtonPanel.add(backslashLabel);
-        p1.add(backslashButtonPanel);
 
         // Create a panel for the buttons
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
@@ -137,7 +188,6 @@ public class homepage extends JFrame{
         // Set the text color of the buttons
         createButton.setForeground(Color.WHITE);
         joinButton.setForeground(Color.WHITE);
-
 
         createButton.addActionListener(new ActionListener() {
             @Override
@@ -180,7 +230,7 @@ public class homepage extends JFrame{
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(gap, 0, gap, 0));
 
         // Add the button panel to p1
-        p1.add(buttonPanel);
+        backslashAndButtonPanel.add(buttonPanel, BorderLayout.CENTER);
 
         
         //cess X codecell wala panel
