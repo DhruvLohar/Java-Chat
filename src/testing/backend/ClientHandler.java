@@ -13,6 +13,8 @@ import testing.DataPacket;
 
 public class ClientHandler implements Runnable {
     public static HashMap<String, ArrayList<ClientHandler>> roomToClients = new HashMap<>();
+    public static HashMap<String, String> roomTitle = new HashMap<>();
+    
     public static final int MAX_CLIENTS_PER_ROOM = 10; // Define your maximum limit
     private Socket socket;
     private BufferedReader bufferedReader;

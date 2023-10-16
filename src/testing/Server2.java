@@ -276,7 +276,12 @@ jLabel1.setText("<html>" + labelText + "</html>");
     // }//GEN-LAST:event_jLabel8MouseClicked
 
     private void jLabel8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseClicked
-        // Redirect to the homepage
+        DataPacket data = new DataPacket();
+        data.put("type", "left_room");
+        data.put("username", state.getUsername());
+        data.put("roomCode", state.getRoomCode());
+        client.sendMessage(data.toString());
+
         homepage homepageWindow = new homepage();
         homepageWindow.setVisible(true);
         this.dispose(); // Close the current window
@@ -291,7 +296,7 @@ jLabel1.setText("<html>" + labelText + "</html>");
 
         jPanel4.setLayout(new BorderLayout());
 
-        JPanel box = createbox(out, true);
+        JPanel box = createbox(out, "",true);
         vertical.add(box);
         vertical.add(Box.createVerticalStrut(15));
 
@@ -337,7 +342,7 @@ jLabel1.setText("<html>" + labelText + "</html>");
                             case "message":
                                 jPanel4.setLayout(new BorderLayout());
 
-                                JPanel box = createbox(data.get("message"), false);
+                                JPanel box = createbox(data.get("message"), data.get("username"), false);
                                 vertical.add(box);
                                 
                                 vertical.add(Box.createVerticalStrut(15));
@@ -345,9 +350,11 @@ jLabel1.setText("<html>" + labelText + "</html>");
                                 break;
                             case "joined_room":
                                 System.out.println("koi toh aaya");
+                                JOptionPane.showMessageDialog(Server2.this, data.get("username") + " joined the room");
                                 break;
                             case "left_room":
                                 System.out.println("koi toh gaya");
+                                JOptionPane.showMessageDialog(Server2.this, data.get("username") + " left the room");
                                 break;
                         }
 
@@ -367,7 +374,7 @@ jLabel1.setText("<html>" + labelText + "</html>");
 
             jPanel4.setLayout(new BorderLayout());
 
-            JPanel box = createbox(out, true);
+            JPanel box = createbox(out, "", true);
             vertical.add(box);
             vertical.add(Box.createVerticalStrut(15));
             jPanel4.add(vertical, BorderLayout.PAGE_START);
@@ -394,15 +401,15 @@ jLabel1.setText("<html>" + labelText + "</html>");
 
     }
 
-    public JPanel createbox(String text, boolean isSelf) {
-        JPanel p2 = formatLabel(text, isSelf);
+    public JPanel createbox(String text, String username, boolean isSelf) {
+        JPanel p2 = formatLabel(text, username, isSelf);
         JPanel box = new JPanel(new BorderLayout());
         box.add(p2, (isSelf) ? BorderLayout.LINE_END : BorderLayout.LINE_START);
         box.setBorder(null);
         return box;
     }
 
-    public JPanel formatLabel(String out, boolean isSelf) {
+    public JPanel formatLabel(String out, String username, boolean isSelf) {
         
             JPanel panel = new RoundedPanel(20);
             panel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 0));
@@ -410,13 +417,11 @@ jLabel1.setText("<html>" + labelText + "</html>");
             pillPanel.setBackground(new Color(0,191, 252)); 
             pillPanel.setPreferredSize(new Dimension(60, 25));
             pillPanel.setOpaque(false);
-            JLabel user =new JLabel(state.getUsername());
+            JLabel user =new JLabel(username);
             pillPanel.add(user);
             if (!isSelf) {
                 panel.setBackground(new Color(164, 157, 255));
-                
-                panel.add(pillPanel);  
-                
+                panel.add(pillPanel);                  
             } else {
                 panel.setBackground(new Color(0, 191, 252));
             }
