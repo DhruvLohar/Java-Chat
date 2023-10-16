@@ -77,8 +77,9 @@ public class Server2 extends javax.swing.JFrame {
         initComponents();
         this.setBackground(new Color(0.0f, 0.0f, 0.0f, 0.0f));
 
+        String TITLE = (state.getTitle() == "") ? "Room code": state.getTitle();
         
-        String labelText = state.getTitle() + "<br><font color='red' size='3'>" + state.getRoomCode() + "</font>";
+        String labelText = TITLE + "<br><font color='red' size='3'>" + state.getRoomCode() + "</font>";
 jLabel1.setText("<html>" + labelText + "</html>");
 
 

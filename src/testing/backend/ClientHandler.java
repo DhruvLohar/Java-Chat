@@ -43,13 +43,18 @@ public class ClientHandler implements Runnable {
             clientRoomCode = roomCode;
 
             ArrayList<ClientHandler> clientsInRoom = roomToClients.get(roomCode);
+            String title = roomTitle.get(roomCode);
             switch (type) {
                 case "create_room":
                     if (clientsInRoom == null) {
                         clientsInRoom = new ArrayList<>();
                         roomToClients.put(roomCode, clientsInRoom);
                     }
+                    if (title == null) {
+                        title = initalPayload.get("title");
+                    }
                     clientsInRoom.add(this);
+
                     System.out.println("A room ( " + roomCode + " ) was created by " + username + ".");
                     break;
                 case "join_room":
